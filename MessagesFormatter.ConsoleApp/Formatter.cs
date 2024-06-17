@@ -77,7 +77,7 @@ namespace MessagesFormatter.ConsoleApp
         /// <returns></returns>
         public string InterpolateWithReplacementsRegex(string text, Dictionary<string, string> replacements)
         {
-            string pattern = @"(?<!\[)\[(?:(?!\[\])\[[^\]]*\]|[^]])+\]"; // Matches any character except ] within brackets, excluding nested double brackets
+            string pattern = @"(?<!\[)\[(?:(?!\[\])\[[^\]]*\]|[^]])+\]"; // Matches any character except ] or [ within brackets
             return Regex.Replace(text, pattern, match =>
             {
                 string key = match.Value.TrimStart('[').TrimEnd(']'); // Extract key from match (handling extra brackets)
