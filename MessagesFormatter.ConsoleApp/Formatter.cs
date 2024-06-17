@@ -23,6 +23,13 @@ namespace MessagesFormatter.ConsoleApp
         {
 
         }
+        /// <summary>
+        ///Implementation of interpolation search by using iteration approach
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="replacements"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public string Interpolate(string text, Dictionary<string, string> replacements)
         {
             string result = text;
@@ -62,7 +69,12 @@ namespace MessagesFormatter.ConsoleApp
             return result;
         }
 
-
+        /// <summary>
+        /// Implementation of interpolation search by using Regex approach
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="replacements"></param>
+        /// <returns></returns>
         public string InterpolateWithReplacementsRegex(string text, Dictionary<string, string> replacements)
         {
             string pattern = @"(?<!\[)\[(?:(?!\[\])\[[^\]]*\]|[^]])+\]"; // Matches any character except ] within brackets, excluding nested double brackets

@@ -1,7 +1,5 @@
 
 
-using MessagesFormatter.ConsoleApp;
-
 namespace MessagesFormatter.ConsoleApp.Tests
 {
     public class FormatterTests
