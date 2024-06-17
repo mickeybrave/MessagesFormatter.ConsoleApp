@@ -5,7 +5,11 @@ namespace MessagesFormatter.ConsoleApp
 {
     public class Formatter
     {
+
         private static Formatter _instance;
+       /// <summary>
+       /// Implemented here Singletone pattern just for convenience instead of calling constructore many times in tests and using 1 instance only because in this case it is optimal way of usage
+       /// </summary>
         public static Formatter Instance
         {
             get
