@@ -5,11 +5,10 @@ namespace MessagesFormatter.ConsoleApp
 {
     public class Formatter
     {
-
         private static Formatter _instance;
-       /// <summary>
-       /// Implemented here Singletone pattern just for convenience instead of calling constructore many times in tests and using 1 instance only because in this case it is optimal way of usage
-       /// </summary>
+        /// <summary>
+        /// Implemented here Singletone pattern just for convenience instead of calling constructore many times in tests and using 1 instance only because in this case it is optimal way of usage
+        /// </summary>
         public static Formatter Instance
         {
             get
@@ -30,65 +29,58 @@ namespace MessagesFormatter.ConsoleApp
         /// <summary>
         ///Implementation of interpolation search by using iteration approach
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="replacements"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public string Interpolate(string text, Dictionary<string, string> replacements)
+        public string Interpolate(string textInput, Dictionary<string, string> replacementsDicionary)
         {
-            string result = text;
+            string textResult = textInput;
             int startIndex = 0;
             while (true)
             {
-                int openingBracketIndex = result.IndexOf('[', startIndex);
-                if (openingBracketIndex == -1)
+                int leftBracketIndex = textResult.IndexOf('[', startIndex);
+                if (leftBracketIndex == -1)
                 {
                     break;
                 }
 
                 // Check for escaped double square brackets
-                if (openingBracketIndex > 0 && result[openingBracketIndex + 1] == '[')
+                if (leftBracketIndex > 0 && textResult[leftBracketIndex + 1] == '[')
                 {
-                    startIndex = openingBracketIndex + 1;
+                    startIndex = leftBracketIndex + 1;
                     continue;
                 }
 
-                int closingBracketIndex = result.IndexOf(']', openingBracketIndex + 1);
-                if (closingBracketIndex == -1)
+                int rightBracketIndex = textResult.IndexOf(']', leftBracketIndex + 1);
+                if (rightBracketIndex == -1)
                 {
-                    throw new ArgumentException("Invalid format: unmatched opening bracket");
+                    throw new ArgumentException("Invalid usage of brackets!");
                 }
 
-                string key = result.Substring(openingBracketIndex + 1, closingBracketIndex - openingBracketIndex - 1);
+                string replacingText = textResult.Substring(leftBracketIndex + 1, rightBracketIndex - leftBracketIndex - 1);
 
-                var cleanValue = key;
-                if (replacements.ContainsKey(key))
+                var cleanValue = replacingText;
+                if (replacementsDicionary.ContainsKey(replacingText))
                 {
-                    cleanValue = replacements[key];
+                    cleanValue = replacementsDicionary[replacingText];
                 }
 
-                result = result.Substring(0, openingBracketIndex) + cleanValue + result.Substring(closingBracketIndex + 1);
-                startIndex = openingBracketIndex + cleanValue.Length;
+                textResult = textResult.Substring(0, leftBracketIndex) + cleanValue + textResult.Substring(rightBracketIndex + 1);
+                startIndex = leftBracketIndex + cleanValue.Length;
             }
-            return result;
+            return textResult;
         }
 
         /// <summary>
         /// Implementation of interpolation search by using Regex approach
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="replacements"></param>
-        /// <returns></returns>
-        public string InterpolateWithReplacementsRegex(string text, Dictionary<string, string> replacements)
+        public string InterpolateWithReplacementsRegex(string textInput, Dictionary<string, string> replacementsDicionary)
         {
-            string pattern = @"(?<!\[)\[(?:(?!\[\])\[[^\]]*\]|[^]])+\]"; // Matches any character except ] or [ within brackets
-            return Regex.Replace(text, pattern, match =>
+            const string pattern = @"(?<!\[)\[(?:(?!\[\])\[[^\]]*\]|[^]])+\]"; // Matches any character except ] or [ within brackets
+            return Regex.Replace(textInput, pattern, match =>
             {
                 string key = match.Value.TrimStart('[').TrimEnd(']'); // Extract key from match (handling extra brackets)
                 var cleanValue = key;// get cleaned from any additional brackets
-                if (replacements.ContainsKey(key))
+                if (replacementsDicionary.ContainsKey(key))
                 {
-                    return replacements[key];
+                    return replacementsDicionary[key];
                 }
                 else
                 {
